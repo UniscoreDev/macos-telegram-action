@@ -1,0 +1,44 @@
+name: "Macos Telegram Action"
+description: "Macos Telegram action"
+author: "GitHub"
+branding:
+  icon: "activity"
+  color: "green"
+inputs:
+  type:
+    description: "Your type: group, topic, channel"
+    required: true
+  message:
+    description: "Your message you want to send to telegram"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Init Macos Telegram Action
+      shell: bash
+      run: |
+        source ${{ github.action_path }}/index.sh
+        health_check
+
+    - name: Send to group
+      shell: bash
+      if: ${{ inputs.type == 'group' }}
+      run: |
+        source ${{ github.action_path }}/index.sh
+        send_telegram_group "${{ inputs.message }}"
+
+    - name: Send to topic
+      shell: bash
+      if: ${{ inputs.type == 'topic' }}
+      run: |
+        source ${{ github.action_path }}/index.sh
+        send_telegram_group_topic "${{ inputs.message }}"
+
+    - name: Send to channel
+      shell: bash
+      if: ${{ inputs.type == 'channel' }}
+      run: |
+        echo hello world
+        source ${{ github.action_path }}/index.sh
+        send_telegram_channel "${{ inputs.message }}"
